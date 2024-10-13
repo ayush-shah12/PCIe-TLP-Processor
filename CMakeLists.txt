@@ -1,47 +1,36 @@
 cmake_minimum_required(VERSION 3.10)
-project(hw1 LANGUAGES C CXX)
-# option(BUILD_CODEGRADE_TESTS "Build test suites into separate executables" OFF)
+project(PCIe_TLP_Processor LANGUAGES C CXX)
 
+# Set the C and C++ standards
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
+
+# Include directories
 include_directories(include test/inputs)
 
-if (NOT BUILD_CODEGRADE_TESTS)  
-  add_executable(hw2_main src/hw2.c src/hw2_main.c)
-  target_compile_options(hw2_main PUBLIC -Wall -Wextra -Wshadow -Wpedantic -Wdouble-promotion -Wformat=2 -Wundef -Werror)
-  target_link_libraries(hw2_main PUBLIC m)
-endif()
+# Define the main executable
+add_executable(PCIe-TLP-Processor src/TLP-Processor.c)
 
+# Compiler options for the main executable
+target_compile_options(PCIe_TLP_Processor PUBLIC 
+    -Wall 
+    -Wextra 
+    -Wshadow 
+    -Wpedantic 
+    -Wdouble-promotion 
+    -Wformat=2 
+    -Wundef 
+    -Werror
+)
+
+target_link_libraries(PCIe-TLP-Processor PUBLIC m)
+
+# Add test executables if needed
 set(TEST_SUITES "parse_tests" "read_unit_test" "write_unit_test")
-set(HIDDEN_TEST_SUITES "hidden_parse_tests" "hidden_read_test" "write_hidden_test")
 
-if (BUILD_CODEGRADE_TESTS)
-  foreach(TEST_SUITE IN LISTS TEST_SUITES)
-  add_executable(${TEST_SUITE} tests/src/${TEST_SUITE}.cpp src/hw2.c)
-  target_compile_options(${TEST_SUITE} PUBLIC -g -Wall -Wextra -Wshadow -Wpedantic -Wdouble-promotion -Wformat=2 -Wundef -Werror)
-  target_include_directories(${TEST_SUITE} PUBLIC include tests/include)
-  target_link_libraries(${TEST_SUITE} PUBLIC gtest gtest_main pthread m)
-  endforeach()
-
-  foreach(TEST_SUITE IN LISTS HIDDEN_TEST_SUITES)
-  add_executable(${TEST_SUITE} tests/src/${TEST_SUITE}.cpp src/hw2.c)
-  target_compile_options(${TEST_SUITE} PUBLIC -g -Wall -Wextra -Wshadow -Wpedantic -Wdouble-promotion -Wformat=2 -Wundef -Werror)
-  target_include_directories(${TEST_SUITE} PUBLIC include tests/include test/inputs)
-  target_link_libraries(${TEST_SUITE} PUBLIC gtest gtest_main pthread m)
-  endforeach()  
-else()
-    add_executable(run_part1_tests tests/src/packet_parse_tests.c src/hw2.c)
-    target_compile_options(run_part1_tests PUBLIC -g -Wall -Wextra -Wshadow -Wpedantic -Wdouble-promotion -Wformat=2 -Wundef -Werror)
-    target_include_directories(run_part1_tests PUBLIC include tests/include)
-    target_link_libraries(run_part1_tests PUBLIC gtest gtest_main pthread m)
-
-    add_executable(run_part2_tests tests/src/write_unit_test.cpp src/hw2.c)
-    target_compile_options(run_part2_tests PUBLIC -g -Wall -Wextra -Wshadow -Wpedantic -Wdouble-promotion -Wformat=2 -Wundef -Werror)
-    target_include_directories(run_part2_tests PUBLIC include tests/include)
-    target_link_libraries(run_part2_tests PUBLIC gtest gtest_main pthread m)
-
-    add_executable(run_part3_tests tests/src/read_unit_test.cpp src/hw2.c)
-    target_compile_options(run_part3_tests PUBLIC -g -Wall -Wextra -Wshadow -Wpedantic -Wdouble-promotion -Wformat=2 -Wundef -Werror)
-    target_include_directories(run_part3_tests PUBLIC include tests/include)
-    target_link_libraries(run_part3_tests PUBLIC gtest gtest_main pthread m)
-endif()
+foreach(TEST_SUITE IN LISTS TEST_SUITES)
+    add_executable(${TEST_SUITE} tests/src/${TEST_SUITE}.cpp src/TLP-Processor.c)
+    target_compile_options(${TEST_SUITE} PUBLIC -g -Wall -Wextra -Wshadow -Wpedantic -Wdouble-promotion -Wformat=2 -Wundef -Werror)
+    target_include_directories(${TEST_SUITE} PUBLIC include tests/include)
+    target_link_libraries(${TEST_SUITE} PUBLIC gtest gtest_main pthread)
+endforeach()

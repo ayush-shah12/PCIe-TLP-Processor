@@ -5,7 +5,7 @@
             "type": "cppdbg",
             "request": "launch",
             "name": "Run Main",
-            "program": "${workspaceRoot}/build/hw2_main",
+            "program": "${workspaceRoot}/build/TLP-Processor_main",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Build",
         },
